@@ -1,5 +1,9 @@
 <?php
 
+header("Access-Control-Allow-Origin: *");
+
+if ($_SERVER["REQUEST_METHOD"] != "POST") die();
+
 require_once("simplejson.php");
 ini_set("display_errors", true);
 error_reporting(-1);
