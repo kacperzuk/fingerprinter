@@ -63,7 +63,6 @@ function collect_clientjs_data(cb) {
         ["Mime Types", c.getMimeTypes()],
         ["Fonts", c.getFonts()],
         ["Timezone", c.getTimeZone()],
-        ["Fonts", c.getFonts()],
         ["Language", c.getLanguage()],
         ["Canvas fingerprint", c.getCanvasPrint()],
     ];
@@ -72,7 +71,13 @@ function collect_clientjs_data(cb) {
 function collect_fingerprintjs_data(cb) {
     new Fingerprint2().get(function(result, components){
         let data = [["Fingerprint", result]];
-        data = data.concat(components.map((c) => [c.key, c.value]));
+        data = data.concat(components.map((c) => {
+            if (c.value instanceof Array) {
+                return [c.key, c.value.join(",")];
+            } else {
+                return [c.key, c.value];
+            }
+        }));
         cb(data);
     });
 }
