@@ -4,7 +4,6 @@ header("Access-Control-Allow-Origin: *");
 
 if ($_SERVER["REQUEST_METHOD"] != "POST") die();
 
-require_once("simplejson.php");
 ini_set("display_errors", true);
 error_reporting(-1);
 
@@ -61,7 +60,7 @@ $dcols = array(
     "clientjs_canvas_fingerprint"
 );
 
-$data = fromJSON(file_get_contents('php://input'), true);
+$data = json_decode(file_get_contents('php://input'), true);
 $prepared_data = array(
     "env_name" => $data["env_name"],
     "ext_name" => $data["ext_name"]
