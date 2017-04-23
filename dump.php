@@ -15,6 +15,7 @@ for ($i = 0; $i < $rs->columnCount(); $i++) {
 }
 fputcsv($out, $columns);
 
+$dbConn->setFetchMode(PDO::FETCH_NUM);
 $q = $dbConn->query("select * from data;");
 foreach($q as $row) {
     fputcsv($out, $row);
