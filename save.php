@@ -8,7 +8,8 @@ require_once("simplejson.php");
 ini_set("display_errors", true);
 error_reporting(-1);
 
-$dbConn = new PDO('pgsql:host=localhost;dbname=kzuk_es', 'kzuk', 'asd');
+$dbopts = parse_url(getenv('DATABASE_URL'));
+$dbConn = new PDO('pgsql:dbname='.ltrim($dbopts["path"],'/').';host='.$dbopts["host"] . ';port=' . $dbopts["port"], $dbopts["user"], $dbopts["pass"]);
 $dbConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $dcols = array(
