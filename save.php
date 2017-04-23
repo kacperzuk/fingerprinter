@@ -82,7 +82,7 @@ $cols = implode(",", $dcols);
 $vals = implode(",", array_fill(0, count($dcols), '?'));
 $q = "INSERT INTO data (ip, $cols) VALUES (?, $vals)";
 $q = $dbConn->prepare($q);
-$values = array();
+$values = array($_SERVER["REMOTE_ADDR"]);
 foreach($dcols as $col) {
     $values[] = $prepared_data[$col];
 }
