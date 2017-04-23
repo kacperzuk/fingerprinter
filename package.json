@@ -1,0 +1,24 @@
+{
+  "name": "fingerprinter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kacperzuk/fingerprinter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kacperzuk/fingerprinter/issues"
+  },
+  "homepage": "https://github.com/kacperzuk/fingerprinter#readme",
+  "dependencies": {
+    "clientjs": "^0.1.11",
+    "fingerprintjs2": "^1.5.1",
+    "purecss": "^0.6.2"
+  }
+}

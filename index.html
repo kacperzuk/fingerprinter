@@ -1,0 +1,172 @@
+<title>Fingerprinter</title>
+<link rel="stylesheet" href="node_modules/purecss/build/pure-min.css">
+<script src="node_modules/clientjs/dist/client.min.js"></script>
+<script src="node_modules/fingerprintjs2/dist/fingerprint2.min.js"></script>
+<script src="node_modules/js-sha1/build/sha1.min.js"></script>
+
+
+<div style="width: 80%; margin: 5rem auto">
+
+<h1>Fingerprinter</h1>
+<div id="current">
+    <form class="pure-form">
+        <fieldset>
+            <legend>Enter test case details</legend>
+
+            <input id="env_name" type="text" placeholder="Environment name" required>
+            <select id="ext_name" required>
+                <option value="">Select...</option>
+                <option>FIXME, add options</option>
+            </select>
+
+
+            <button id="savebtn" type="submit" class="pure-button pure-button-primary">Fingerprint and save</button>
+        </fieldset>
+    </form>
+</div>
+
+<h2>Collected data:</h2>
+<h3>Table with best data</h3>
+<table style="width: 100%; table-layout: fixed" id="table" class="pure-table pure-table-bordered">
+    <thead>
+        <tr><th style="width: 20%">Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<h3>Fingerprint2JS</h3>
+<table style="width: 100%; table-layout: fixed" id="table1" class="pure-table pure-table-bordered">
+    <thead>
+        <tr><th style="width: 20%">Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<h3>ClientJS</h3>
+<table style="width: 100%; table-layout: fixed" id="table2" class="pure-table pure-table-bordered">
+    <thead>
+        <tr><th style="width: 20%">Property</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+</div>
+
+<script>
+function collect_clientjs_data(cb) {
+    let c = new ClientJS();
+    let data = [
+        ["Fingerprint", c.getFingerprint()],
+        ["UA", c.getUserAgent()],
+        ["Screen info", c.getScreenPrint()],
+        ["plugins", c.getPlugins()],
+        ["Mime Types", c.getMimeTypes()],
+        ["Fonts", c.getFonts()],
+        ["Timezone", c.getTimeZone()],
+        ["Fonts", c.getFonts()],
+        ["Language", c.getLanguage()],
+        ["Canvas fingerprint", c.getCanvasPrint()],
+    ];
+    cb(data);
+}
+function collect_fingerprintjs_data(cb) {
+    new Fingerprint2().get(function(result, components){
+        let data = [["Fingerprint", result]];
+        data = data.concat(components.map((c) => [c.key, c.value]));
+        cb(data);
+    });
+}
+function collect_best_data(all, cb) {
+    let unique_fonts = all.clientjs.Fonts.split(',').map((f) => {
+        return f.replace(/\s/g, "").toLowerCase();
+    });
+    all.fingerprint2.js_fonts.forEach((f) => {
+        let ff = f.replace(/\s/g, "").toLowerCase();
+        if (unique_fonts.indexOf(ff) === -1) {
+            unique_fonts.push(ff);
+        }
+    });
+    let data = [
+        ["UA", all.clientjs.UA],
+        ["Language", all.clientjs.Language],
+        ["Screen fingerprint", all.clientjs["Screen info"]],
+        ["Plugins", all.fingerprint2["regular_plugins"]],
+        ["Fonts", unique_fonts],
+        ["TimeZone", all.clientjs.Timezone],
+        ["Canvas Fingerprint", all.fingerprint2["canvas"]],
+        ["WebGL fingerprint", all.fingerprint2["webgl"]],
+        ["Hardware concurrency", all.fingerprint2["hardware_concurrency"]]
+    ];
+    data.unshift(["Hash", sha1(JSON.stringify(data))]);
+    cb(data);
+}
+
+function submit(data) {
+    let c = document.getElementById("current");
+    let prepared_data = {
+        env_name: data.env_name,
+        ext_name: data.ext_name
+    };
+    Object.keys(data.best).forEach((key) => {
+        key = key.replace(/\s/g, '_').toLowerCase();
+        prepared_data[key] = data.best[key];
+    });
+    Object.keys(data.clientjs).forEach((key) => {
+        key = key.replace(/\s/g, '_').toLowerCase();
+        prepared_data["clientjs_"+key] = data.clientjs[key];
+    });
+    Object.keys(data.fingerprint2).forEach((key) => {
+        key = key.replace(/\s/g, '_').toLowerCase();
+        prepared_data["f2js_"+key] = data.fingerprint2[key];
+    });
+    let query_str = Object.keys(prepared_data).map((k) => {
+        return encodeURIComponent(k)+"="+encodeURIComponent(prepared_data[k]);
+    }).join("&");
+    
+    fetch("save.php", {
+        method: "POST",
+        body: query_str
+    }).then((res) => {
+        res.text().then((r) => {
+            c.innerHTML = "SUCCESS! Server response: " + r;
+        });
+    }).catch((err) => {
+        c.innerHTML = "Failed to send :(. Error: " + err;
+    });
+    console.log(data);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("savebtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        let all = {"clientjs": {}, "fingerprint2": {}, "best": {}};
+        all["env_name"] = document.getElementById("env_name").value;
+        all["ext_name"] = document.getElementById("ext_name").value;
+        let c = document.getElementById("current");
+        c.innerHTML = "Please wait...";
+        collect_clientjs_data((data) => {
+            let table = document.getElementById("table2").children[1];
+            data.forEach((d) => {
+                table.innerHTML += `<tr><td>${d[0]}</td><td>${d[1]}</td></tr>`;
+                all.clientjs[d[0]] = d[1];
+            });
+            collect_fingerprintjs_data((data) => {
+                let table = document.getElementById("table1").children[1];
+                data.forEach((d) => {
+                    table.innerHTML += `<tr><td>${d[0]}</td><td>${d[1]}</td></tr>`;
+                    all.fingerprint2[d[0]] = d[1];
+                });
+                collect_best_data(all, (data) => {
+                    let table = document.getElementById("table").children[1];
+                    data.forEach((d) => {
+                        table.innerHTML += `<tr><td>${d[0]}</td><td>${d[1]}</td></tr>`;
+                        all.best[d[0]] = d[1];
+                    });
+                    submit(all);
+                });
+            });
+
+        });
+    });
+});
+</script>
