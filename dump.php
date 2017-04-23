@@ -8,6 +8,13 @@ $dbConn = new PDO('pgsql:dbname='.ltrim($dbopts["path"],'/').';host='.$dbopts["h
 $dbConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $out = fopen('php://output', 'w');
+$rs = $dbConn->query('SELECT * FROM my_table LIMIT 0');
+for ($i = 0; $i < $rs->columnCount(); $i++) {
+    $col = $rs->getColumnMeta($i);
+    $columns[] = $col['name'];
+}
+fputcsv($out, $columns);
+
 $q = $dbConn->query("select * from data;");
 foreach($q as $row) {
     fputcsv($out, $row);
