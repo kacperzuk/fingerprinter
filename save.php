@@ -82,7 +82,16 @@ $cols = implode(",", $dcols);
 $vals = implode(",", array_fill(0, count($dcols), '?'));
 $q = "INSERT INTO data (ip, $cols) VALUES (?, $vals)";
 $q = $dbConn->prepare($q);
-$values = array($_SERVER["REMOTE_ADDR"]);
+function getIpAddress() {
+    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ipAddresses = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        return trim(end($ipAddresses));
+    }
+    else {
+        return $_SERVER['REMOTE_ADDR'];
+    }
+}
+$values = array(getIpAddress());
 foreach($dcols as $col) {
     $values[] = $prepared_data[$col];
 }
