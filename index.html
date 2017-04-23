@@ -123,7 +123,7 @@ function submit(data) {
         return encodeURIComponent(k)+"="+encodeURIComponent(prepared_data[k]);
     }).join("&");
     
-    fetch("save.php", {
+    fetch("https://peaceful-tor-93610.herokuapp.com/save.php", {
         method: "POST",
         body: query_str
     }).then((res) => {
