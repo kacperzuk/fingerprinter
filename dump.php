@@ -13,8 +13,10 @@ $dbConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $q = $dbConn->query("select * from data;");
 
+echo "======\n";
 $out = fopen('php://output', 'w');
 foreach($q as $row) {
     fputcsv($out, $row);
 }
 fclose($out);
+echo "=======\n";
