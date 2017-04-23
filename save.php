@@ -85,6 +85,5 @@ $values = array();
 foreach($dcols as $col) {
     $values[] = $prepared_data[$col];
 }
-var_dump($values); die();
 $q->execute($values);
 echo "OK";
