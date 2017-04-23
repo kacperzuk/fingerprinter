@@ -79,9 +79,8 @@ foreach($data["fingerprint2"] as $k => $v) {
 }
 
 $cols = implode(",", $dcols);
-$vals = implode(",", array_fill(0, count($cols), '?'));
+$vals = implode(",", array_fill(0, count($dcols), '?'));
 $q = "INSERT INTO data (ip, $cols) VALUES (?, $vals)";
-var_dump($q); die();
 $q = $dbConn->prepare($q);
 $values = array();
 foreach($dcols as $col) {
