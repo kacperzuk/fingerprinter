@@ -8,7 +8,7 @@
 <div style="width: 80%; margin: 5rem auto">
 
 <h1>Fingerprinter</h1>
-<a href="https://peaceful-tor-93610.herokuapp.com/dump.php">Click here to download CSV of all data from database</a>
+<a href="dump.php">Click here to download CSV of all data from database</a>
 <div id="current">
     <form class="pure-form" id="form">
         <fieldset>
@@ -110,7 +110,7 @@ function collect_best_data(all, cb) {
 function submit(data) {
     let c = document.getElementById("current");
     
-    fetch("https://peaceful-tor-93610.herokuapp.com/save.php", {
+    fetch("save.php", {
         method: "POST",
         body: JSON.stringify(data)
     }).then((res) => {
