@@ -9,7 +9,7 @@
 
 <h1>Fingerprinter</h1>
 <div id="current">
-    <form class="pure-form">
+    <form class="pure-form" id="form">
         <fieldset>
             <legend>Enter test case details</legend>
 
@@ -20,7 +20,7 @@
             </select>
 
 
-            <button id="savebtn" type="submit" class="pure-button pure-button-primary">Fingerprint and save</button>
+            <button type="submit" class="pure-button pure-button-primary">Fingerprint and save</button>
         </fieldset>
     </form>
 </div>
@@ -85,7 +85,7 @@ function collect_best_data(all, cb) {
     let unique_fonts = all.clientjs.Fonts.split(',').map((f) => {
         return f.replace(/\s/g, "").toLowerCase();
     });
-    all.fingerprint2.js_fonts.forEach((f) => {
+    all.fingerprint2.js_fonts.split(",").forEach((f) => {
         let ff = f.replace(/\s/g, "").toLowerCase();
         if (unique_fonts.indexOf(ff) === -1) {
             unique_fonts.push(ff);
@@ -96,7 +96,7 @@ function collect_best_data(all, cb) {
         ["Language", all.clientjs.Language],
         ["Screen fingerprint", all.clientjs["Screen info"]],
         ["Plugins", all.fingerprint2["regular_plugins"]],
-        ["Fonts", unique_fonts],
+        ["Fonts", unique_fonts.join(",")],
         ["TimeZone", all.clientjs.Timezone],
         ["Canvas Fingerprint", all.fingerprint2["canvas"]],
         ["WebGL fingerprint", all.fingerprint2["webgl"]],
@@ -123,7 +123,7 @@ function submit(data) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById("savebtn").addEventListener("click", (e) => {
+    document.getElementById("form").addEventListener("submit", (e) => {
         e.preventDefault();
         let all = {"clientjs": {}, "fingerprint2": {}, "best": {}};
         all["env_name"] = document.getElementById("env_name").value;
