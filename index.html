@@ -103,29 +103,10 @@ function collect_best_data(all, cb) {
 
 function submit(data) {
     let c = document.getElementById("current");
-    let prepared_data = {
-        env_name: data.env_name,
-        ext_name: data.ext_name
-    };
-    Object.keys(data.best).forEach((key) => {
-        key = key.replace(/\s/g, '_').toLowerCase();
-        prepared_data[key] = data.best[key];
-    });
-    Object.keys(data.clientjs).forEach((key) => {
-        key = key.replace(/\s/g, '_').toLowerCase();
-        prepared_data["clientjs_"+key] = data.clientjs[key];
-    });
-    Object.keys(data.fingerprint2).forEach((key) => {
-        key = key.replace(/\s/g, '_').toLowerCase();
-        prepared_data["f2js_"+key] = data.fingerprint2[key];
-    });
-    let query_str = Object.keys(prepared_data).map((k) => {
-        return encodeURIComponent(k)+"="+encodeURIComponent(prepared_data[k]);
-    }).join("&");
     
     fetch("https://peaceful-tor-93610.herokuapp.com/save.php", {
         method: "POST",
-        body: query_str
+        body: JSON.stringify(data)
     }).then((res) => {
         res.text().then((r) => {
             c.innerHTML = "SUCCESS! Server response: " + r;
