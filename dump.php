@@ -1,9 +1,7 @@
 <?php
 
 header("Content-Type: text/plain");
-
-ini_set("display_errors", true);
-error_reporting(-1);
+header('Content-Disposition: attachment; filename="fingerprinter_data.csv"');
 
 $dbopts = parse_url(getenv('DATABASE_URL'));
 $dbConn = new PDO('pgsql:dbname='.ltrim($dbopts["path"],'/').';host='.$dbopts["host"] . ';port=' . $dbopts["port"], $dbopts["user"], $dbopts["pass"]);
