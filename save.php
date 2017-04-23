@@ -66,15 +66,15 @@ $prepared_data = array(
     "ext_name" => $data["ext_name"]
 );
 foreach($data["best"] as $k => $v) {
-    $k = strtolower(str_replace(" ", "_", $data));
+    $k = strtolower(str_replace(" ", "_", $k));
     $prepared_data[$k] = $v;
 }
 foreach($data["clientjs"] as $k => $v) {
-    $k = "clientjs_".strtolower(str_replace(" ", "_", $data));
+    $k = "clientjs_".strtolower(str_replace(" ", "_", $k));
     $prepared_data[$k] = $v;
 }
 foreach($data["fingerprint2"] as $k => $v) {
-    $k = "f2js_".strtolower(str_replace(" ", "_", $data));
+    $k = "f2js_".strtolower(str_replace(" ", "_", $k));
     $prepared_data[$k] = $v;
 }
 
