@@ -7,6 +7,9 @@
     if(navigator.platform === undefined) {
         navigator.platform = "!BLOCKED!";
     }
+    if(navigator.plugins === undefined) {
+        navigator.plugins = ["!BLOCKED!"];
+    }
 </script>
 <script src="node_modules/clientjs/dist/client.min.js"></script>
 <script src="node_modules/fingerprintjs2/dist/fingerprint2.min.js"></script>
