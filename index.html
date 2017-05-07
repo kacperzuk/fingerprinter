@@ -1,7 +1,9 @@
 <title>Fingerprinter</title>
 <link rel="stylesheet" href="node_modules/purecss/build/pure-min.css">
 <script>
-    console.log(navigator.userAgent)
+    if(navigator.userAgent === undefined) {
+        navigator.userAgent = "!BLOCKED!";
+    }
 </script>
 <script src="node_modules/clientjs/dist/client.min.js"></script>
 <script src="node_modules/fingerprintjs2/dist/fingerprint2.min.js"></script>
