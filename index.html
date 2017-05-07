@@ -78,11 +78,14 @@ function collect_clientjs_data(cb) {
 function collect_fingerprintjs_data(cb) {
     var options = [
         null,
-        { excludeWebGL: true }
+        { excludeWebGL: true },
+        { excludeCanvas: true },
+        { excludeCanvas: true, excludeWebGL: true },
     ];
     var success = false;
     for(var i = 0; i < options.length; i++) {
         try { 
+            console.log("Fingerprintjs trying options: ", options);
             new Fingerprint2().get(function(result, components){
                 let data = [["Fingerprint", result]];
                 data = data.concat(components.map((c) => {
