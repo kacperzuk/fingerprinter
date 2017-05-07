@@ -99,6 +99,7 @@ function collect_fingerprintjs_data(cb) {
             });
             return;
         } catch(err) {
+            console.warning(err)
         }
     }
     console.error("ALL FINGERPRINTJS TRIES FAILED!")
