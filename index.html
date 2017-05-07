@@ -1,6 +1,10 @@
 <title>Fingerprinter</title>
 <link rel="stylesheet" href="node_modules/purecss/build/pure-min.css">
 <script>
+    // fixes for RubberGlove
+    if(navigator.language === undefined) {
+        navigator.language = "!BLOCKED!";
+    }
     if(navigator.userAgent === undefined) {
         navigator.userAgent = "!BLOCKED!";
     }
@@ -84,7 +88,7 @@ function collect_clientjs_data(cb) {
         ["Mime Types", c.getMimeTypes()],
         ["Fonts", c.getFonts()],
         ["Timezone", c.getTimeZone()],
-        ["Language", c.getLanguage() || "!BLOCKED!"],
+        ["Language", c.getLanguage()],
         ["Canvas fingerprint", c.getCanvasPrint()],
     ];
     cb(data);
