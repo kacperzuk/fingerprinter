@@ -84,7 +84,7 @@ function collect_clientjs_data(cb) {
         ["Mime Types", c.getMimeTypes()],
         ["Fonts", c.getFonts()],
         ["Timezone", c.getTimeZone()],
-        ["Language", c.getLanguage()],
+        ["Language", c.getLanguage() || "!BLOCKED!"],
         ["Canvas fingerprint", c.getCanvasPrint()],
     ];
     cb(data);
