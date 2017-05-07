@@ -77,17 +77,15 @@ function collect_clientjs_data(cb) {
 }
 function collect_fingerprintjs_data(cb) {
     var options = [
-        undefined,
-        { excludeWebGL: true },
-        { excludeCanvas: true },
-        { excludeCanvas: true, excludeWebGL: true },
+        { opts: undefined, fixes: [] },
+        { excludeWebGL: true, fixes: [["webgl", "!BLOCKED!"]] }
     ];
     var success = false;
     for(var i = 0; i < options.length; i++) {
         var opts = options[i];
-        console.log("Fingerprintjs trying options:", opts)
+        console.log("Fingerprintjs trying options:", opts.opts)
         try { 
-            new Fingerprint2(opts).get(function(result, components){
+            new Fingerprint2(opts.opts).get(function(result, components){
                 let data = [["Fingerprint", result]];
                 data = data.concat(components.map((c) => {
                     if (c.value instanceof Array) {
@@ -96,6 +94,7 @@ function collect_fingerprintjs_data(cb) {
                         return [c.key, c.value];
                     }
                 }));
+                data = data.concat(opts.fixes);
                 cb(data);
             });
             return;
