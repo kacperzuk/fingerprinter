@@ -78,7 +78,10 @@ function collect_clientjs_data(cb) {
 function collect_fingerprintjs_data(cb) {
     var options = [
         { opts: undefined, fixes: [] },
-        { excludeWebGL: true, fixes: [["webgl", "!BLOCKED!"]] }
+        {
+            opts: { excludeWebGL: true },
+            fixes: [["webgl", "!BLOCKED!"]]
+        }
     ];
     var success = false;
     for(var i = 0; i < options.length; i++) {
