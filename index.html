@@ -81,21 +81,24 @@ function collect_fingerprintjs_data(cb) {
         { excludeWebGL: true }
     ];
     var success = false;
-    try { 
-        new Fingerprint2().get(function(result, components){
-            let data = [["Fingerprint", result]];
-            data = data.concat(components.map((c) => {
-                if (c.value instanceof Array) {
-                    return [c.key, c.value.join(",")];
-                } else {
-                    return [c.key, c.value];
-                }
-            }));
-            cb(data);
-        });
-    } catch(err) {
-        
+    for(var i = 0; i < options.length; i++) {
+        try { 
+            new Fingerprint2().get(function(result, components){
+                let data = [["Fingerprint", result]];
+                data = data.concat(components.map((c) => {
+                    if (c.value instanceof Array) {
+                        return [c.key, c.value.join(",")];
+                    } else {
+                        return [c.key, c.value];
+                    }
+                }));
+                cb(data);
+            });
+            return;
+        } catch(err) {
+        }
     }
+    console.error("ALL FINGERPRINTJS TRIES FAILED!")
 }
 function collect_best_data(all, cb) {
     let unique_fonts = all.clientjs.Fonts.split(',').map((f) => {
